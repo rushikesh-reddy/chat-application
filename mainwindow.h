@@ -2,11 +2,15 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QStyle>
-#include "MyTCPServer.h"
+#include<QStyle>
+#include<QHostAddress>
+#include "DeviceController.h"
+#include <QMetaEnum>
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui {
+class MainWindow;
+}
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -18,18 +22,23 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_btnStartServer_clicked();
+    void on_lnIPAddress_textChanged(const QString &arg1);
 
-    void newClinetConnected();
+    void on_btnConnect_clicked();
 
-    void on_btnSendToAll_clicked();
+    void device_connected();
+    void device_disconnected();
+    void device_stateChanged(QAbstractSocket::SocketState);
+    void device_errorOccurred(QAbstractSocket::SocketError);
+    void device_dataReady(QByteArray);
 
-    void clientDisconnected();
+    void on_pushButton_clicked();
 
-    void clientDataReceived(QString message);
+    void on_btnSend_clicked();
 
 private:
     Ui::MainWindow *ui;
-    MyTCPServer *_server;
+    DeviceController _controller;
+    void setDeviceController();
 };
 #endif // MAINWINDOW_H
